@@ -1,0 +1,12 @@
+# ---------------------------------------------------------------------------
+# Online Examination System - Apache configuration
+# ---------------------------------------------------------------------------
+# Do not allow directory listings.
+Options -Indexes
+
+# Friendly error pages. The path assumes the project is served from
+# http://<host>/online-examination-system/  - adjust the prefix if you deploy
+# the application at the document root or under a different folder name.
+ErrorDocument 403 /online-examination-system/error.php
+ErrorDocument 404 /online-examination-system/error.php
+ErrorDocument 500 /online-examination-system/error.php

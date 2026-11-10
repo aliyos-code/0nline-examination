@@ -1,0 +1,19 @@
+# Local secrets and machine-specific database configuration
+.env
+.env.*
+!.env.example
+/config/database.php
+
+# Runtime data
+/assets/uploads/
+/.localdb/
+*.log
+*.cache
+
+# Editor and operating-system metadata
+.vscode/
+.idea/
+*.code-workspace
+Thumbs.db
+Desktop.ini
+.DS_Store

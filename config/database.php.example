@@ -1,0 +1,50 @@
+<?php
+/**
+ * Local database configuration template.
+ *
+ * Copy this file to config/database.php, then set the DB_* values in .env
+ * (copy .env.example first). The active database.php file is intentionally
+ * ignored by Git so credentials are never committed.
+ */
+
+require_once __DIR__ . '/env.php';
+
+define('DB_HOST', env('DB_HOST', '127.0.0.1'));
+define('DB_PORT', env('DB_PORT', '3306'));
+define('DB_NAME', env('DB_NAME', 'online_exam_system'));
+define('DB_USER', env('DB_USER', 'root'));
+define('DB_PASS', env('DB_PASS', ''));
+define('DB_CHARSET', env('DB_CHARSET', 'utf8mb4'));
+
+// Application base URL detection.
+$docRoot = str_replace('\\', '/', rtrim(isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : '', '/'));
+$appRoot = str_replace('\\', '/', dirname(__DIR__));
+$base = ($docRoot !== '' && strpos($appRoot, $docRoot) === 0)
+    ? substr($appRoot, strlen($docRoot))
+    : '';
+define('APP_BASE', rtrim($base, '/'));
+
+/** Return a lazily-created shared PDO connection. */
+function db()
+{
+    static $pdo = null;
+
+    if ($pdo === null) {
+        $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ];
+
+        try {
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+        } catch (PDOException $e) {
+            error_log('DB Connection Failed: ' . $e->getMessage());
+            http_response_code(500);
+            exit('A database connection error occurred. Check your local database configuration and make sure MySQL is running.');
+        }
+    }
+
+    return $pdo;
+}
